@@ -19,7 +19,6 @@ if __name__ == "__main__":
     dynamic_salt = gen(10)
 
     master_hash = hashed(input("Select your master password: ")+dynamic_salt)
-    print(master_hash)
 
     #authenticaion-------------------------------------------------------
     access_granted = False
@@ -32,3 +31,4 @@ if __name__ == "__main__":
     else:
         print("\nACCESS_DENIED")
     #--------------------------------------------------------------------
+
