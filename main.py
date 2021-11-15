@@ -8,6 +8,19 @@ Main code which will accomplish the following goals:
 '''
 from generate import gen
 import hashlib
+import sqlite3
+
+class database:
+    def __init__(self):
+        self.conn = sqlite3.connect("database.db")
+        self.curr = sqliteConnection.cursor()
+    def addData(self, target):
+        #TODO
+    def deleteData(self, target):
+        #TODO
+    def toString(self):
+        #TODO
+
 
 def hashed(x):
 #returns sha256 hashed hexadecimal of string input x
