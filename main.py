@@ -12,7 +12,7 @@ import sqlite3
 
 
 class database:
-    def __init__(self, master_hash):
+    def __init__(self, master_hash,salt):
         self.conn = sqlite3.connect("database.db")
         self.curr = self.conn.cursor()
         try: 
@@ -21,7 +21,7 @@ class database:
             print("Table already exists")
             return
         #adds master_hash as first entry in database
-        self.curr.execute("INSERT INTO passwords VALUES ('master_hash',?)",(master_hash,),)
+        self.curr.execute("INSERT INTO passwords VALUES (?,?)",(salt,master_hash,),)
     def add(self, website, password):
         self.curr.execute("INSERT INTO passwords VALUES (?,?)",(website,password,),)    
     def delete(self, target):
@@ -37,28 +37,30 @@ def hashed(x):
 #returns sha256 hashed hexadecimal of string input x
     return hashlib.sha256(bytes(x,"utf-8")).hexdigest()
 
+def authenticate():
+        #AUTHENTICATION
+        #--------------------------------------------------------------------
+        user_input = hashed(input("Enter your master password: ")+dynamic_salt)
+        #print("\nMaster hash:", master_hash)
+        #print("Input hash :", user_input)
+        if (user_input == master_hash):
+            print("\nACCESS_GRANTED")
+            return True
+        else:
+            print("\nACCESS_DENIED")
+            return False
+        #--------------------------------------------------------------------
 
 if __name__ == "__main__":
     print("Welcome to your password vault")
-    dynamic_salt = gen(10)
+    
+    mode = input('''
+                 Select your option:
+                    1)Create new Password List
+                    2)Use Existing Password List
+                 ''')
+    if(mode == "1"):
+        dynamic_salt = gen(10)
+        master_hash = hashed(input("Select your master password: ")+dynamic_salt)
 
-    master_hash = hashed(input("Select your master password: ")+dynamic_salt)
-
-    #AUTHENTICATION
-    #--------------------------------------------------------------------
-    access_granted = False
-    user_input = hashed(input("Enter your master password: ")+dynamic_salt)
-    #print("\nMaster hash:", master_hash)
-    #print("Input hash :", user_input)
-    if (user_input == master_hash):
-        print("\nACCESS_GRANTED")
-        access_granted = True
-    else:
-        print("\nACCESS_DENIED")
-    #--------------------------------------------------------------------
-    #INITIALIZE DATABASE
-    d = database(master_hash) 
-    d.add("google.com","password1")
-    d.add("facebook.com","PASSWORD")
-    d.toString()
-
+       
